@@ -1,20 +1,42 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# PromptWriter Pro
 
-# Run and deploy your AI Studio app
+AI-powered thesis experiment platform for testing and comparing multiple prompt engineering variants with automated evaluation.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/drive/1n_ZPPTt1K-vcp8rgI5J0Py6rGlfs5nTY
+- 🎯 **8 Prompt Variants**: Zero-shot, One-shot, Few-shot, Persona, Structured Outline, Decomposition, Visual-Grounded, and Multi-Agent
+- 📊 **Automated Evaluation**: Multi-metric scoring (coherence, creativity, character consistency, style match, ending strength)
+- 📈 **Visual Analytics**: Interactive charts and side-by-side comparison views
+- 💾 **Experiment History**: Save and review past experiments with local storage
+- 🔄 **OpenAI Integration**: Powered by GPT-4o-mini for generation and evaluation
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
+**Prerequisites:** Node.js 16+
 
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/ramwanikirtan/PromptLab.git
+   cd PromptLab
+   ```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `OPENAI_API_KEY` in [.env.local](.env.local) to your OpenAI API key
-3. Run the app:
-   `npm run dev`
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables:**
+   ```bash
+   cp .env.example .env.local
+   ```
+   Edit `.env.local` and add your OpenAI API key:
+   ```
+   OPENAI_API_KEY=your_openai_api_key_here
+   ```
+
+4. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+
+5. **Open your browser** at `http://localhost:3000` (or the port shown in terminal)
