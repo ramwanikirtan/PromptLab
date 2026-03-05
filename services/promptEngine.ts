@@ -1,4 +1,3 @@
-
 import { VariantId, StoryConfig } from '../types';
 
 export const createPrompt = (variant: VariantId, config: StoryConfig): string => {
@@ -104,3 +103,21 @@ You must respond with a raw JSON object only.
 }
 `.trim();
 };
+
+// PATCH: Improved system and user prompts for creative writing
+export const SYSTEM_PROMPT = `
+You are a creative writing assistant. Your task is to generate literary stories with the following qualities:
+- Use a wide, varied vocabulary; avoid repeating the same words.
+- Write in longer, complex sentences with varied structure.
+- Employ literary devices: metaphor, imagery, sensory detail.
+- Maintain thematic continuity between paragraphs (reference previous ideas in the next paragraph).
+- Target 300–500 words minimum.
+- Match the tone and style of the reference text provided.
+`;
+
+export const createUserPrompt = (reference: string, genre: string, tone: string, wordCount: number) => `
+Write in this style: ${reference}
+Genre: ${genre}
+Tone: ${tone}
+Write approximately ${wordCount} words.
+`;

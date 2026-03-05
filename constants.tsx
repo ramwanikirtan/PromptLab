@@ -1,5 +1,12 @@
 
-import { VariantId, PromptTemplate, StoryConfig } from './types';
+import { VariantId, PromptTemplate, StoryConfig, ModelId, ModelConfig } from './types';
+
+export const AVAILABLE_MODELS: ModelConfig[] = [
+  { id: ModelId.GPT4O_MINI, label: 'GPT-4o-mini', provider: 'openai', description: 'Fast and cost-effective OpenAI model' },
+  { id: ModelId.GPT35_TURBO, label: 'GPT-3.5-turbo', provider: 'openai', description: 'Classic OpenAI chat model' },
+  { id: ModelId.GEMINI_FLASH, label: 'Gemini 2.0 Flash', provider: 'google', description: 'Google\'s fast multimodal model' },
+  { id: ModelId.MISTRAL_7B, label: 'Llama-3.2-3B', provider: 'mistral', description: 'Meta Llama 3.2 via Hugging Face' }
+];
 
 export const VARIANT_TEMPLATES: PromptTemplate[] = [
   { id: VariantId.V0, label: 'Zero-Shot', description: 'Plain instruction with no examples.' },
@@ -22,5 +29,7 @@ export const DEFAULT_STORY_CONFIG: StoryConfig = {
   includes: ['Danube river at night', 'morally difficult choice'],
   avoids: ['technical sci-fi jargon', 'happy endings'],
   temperature: 0.8,
-  isDeterministic: false
+  isDeterministic: false,
+  selectedModels: [ModelId.GPT4O_MINI],
+  selectedVariants: []
 };

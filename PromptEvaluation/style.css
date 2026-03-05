@@ -1,0 +1,347 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Georgia', serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #fff;
+}
+
+/* ── LAYOUT ── */
+.shell {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  border-right: 1px solid #d0d0d0;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background: #fafafa;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.app-title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #1a1a1a;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #d0d0d0;
+}
+.app-title span {
+  display: block;
+  font-size: 11px;
+  font-family: monospace;
+  color: #888;
+  font-weight: normal;
+  margin-top: 3px;
+}
+
+.field-label {
+  font-size: 11px;
+  font-family: monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #666;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.model-row { margin-bottom: 14px; }
+
+.model-name {
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.model-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+textarea {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 8px;
+  font-family: monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #333;
+  background: #fff;
+  resize: vertical;
+  min-height: 72px;
+  outline: none;
+}
+textarea:focus { border-color: #555; }
+textarea::placeholder { color: #bbb; }
+
+.wc {
+  font-size: 10px;
+  font-family: monospace;
+  color: #aaa;
+  text-align: right;
+  margin-top: 2px;
+}
+
+.ref-textarea { min-height: 56px; font-style: italic; }
+
+.btn-run {
+  width: 100%;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  font-family: 'Georgia', serif;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 3px;
+  letter-spacing: 0.3px;
+}
+.btn-run:hover { background: #333; }
+
+.btn-reset {
+  width: 100%;
+  background: transparent;
+  color: #888;
+  border: 1px solid #ccc;
+  padding: 8px;
+  font-family: monospace;
+  font-size: 11px;
+  cursor: pointer;
+  border-radius: 3px;
+  margin-top: 6px;
+}
+.btn-reset:hover { color: #333; border-color: #888; }
+
+/* ── MAIN ── */
+.main {
+  padding: 36px 44px 80px;
+  max-width: 860px;
+}
+
+.page-header {
+  border-bottom: 2px solid #1a1a1a;
+  padding-bottom: 12px;
+  margin-bottom: 36px;
+}
+.page-header h1 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1a1a1a;
+}
+.page-header p {
+  font-size: 12px;
+  color: #888;
+  font-family: monospace;
+  margin-top: 3px;
+}
+
+/* ── SECTIONS ── */
+.section { margin-bottom: 40px; }
+.section-title {
+  font-size: 12px;
+  font-family: monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #888;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 6px;
+  margin-bottom: 16px;
+}
+
+/* ── WINNER ── */
+.winner-box {
+  border: 1px solid #1a1a1a;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.winner-label { font-size: 11px; font-family: monospace; color: #888; margin-bottom: 4px; }
+.winner-name  { font-size: 22px; font-weight: bold; }
+.winner-detail { font-size: 12px; font-family: monospace; color: #666; margin-top: 6px; }
+.winner-score { text-align: right; }
+.winner-score .big { font-size: 40px; font-weight: bold; line-height: 1; }
+.winner-score small { font-size: 11px; color: #888; font-family: monospace; display: block; }
+
+/* ── SCORE CARDS ── */
+.score-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: #d0d0d0;
+  border: 1px solid #d0d0d0;
+}
+.score-cell {
+  background: #fff;
+  padding: 14px 16px;
+}
+.score-cell.winner-cell { background: #f5f5f5; }
+.sc-model { font-size: 11px; font-family: monospace; color: #888; margin-bottom: 4px; }
+.sc-num { font-size: 26px; font-weight: bold; color: #1a1a1a; line-height: 1; }
+.sc-breakdown { font-size: 10px; font-family: monospace; color: #aaa; margin-top: 4px; line-height: 1.6; }
+.sc-bar { height: 2px; background: #e8e8e8; margin-top: 10px; }
+.sc-fill { height: 100%; background: #1a1a1a; transition: width 0.8s ease; }
+
+/* ── FORMULA TABLE ── */
+.formula-table { width: 100%; border-collapse: collapse; }
+.formula-table th {
+  text-align: left;
+  font-size: 11px;
+  font-family: monospace;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #444;
+}
+.formula-table td {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  vertical-align: top;
+  font-size: 13px;
+}
+.metric-name { font-family: monospace; font-size: 12px; font-weight: bold; color: #1a1a1a; white-space: nowrap; }
+.metric-group { font-size: 10px; font-family: monospace; color: #888; display: block; font-weight: normal; margin-top: 2px; }
+.formula-math {
+  font-family: monospace;
+  font-size: 11.5px;
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  padding: 7px 10px;
+  display: block;
+  white-space: pre;
+  color: #1a3a7a;
+  line-height: 1.6;
+}
+.formula-note { font-size: 12px; color: #666; margin-top: 6px; font-style: italic; }
+
+/* ── CHARTS ── */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.chart-box {
+  border: 1px solid #ddd;
+  padding: 16px;
+}
+.chart-title { font-size: 11px; font-family: monospace; color: #888; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+canvas { max-height: 220px; }
+
+/* ── HEATMAP ── */
+.hm-table { width: 100%; border-collapse: collapse; font-size: 11px; font-family: monospace; }
+.hm-table th {
+  padding: 7px 10px;
+  text-align: center;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  font-weight: bold;
+  font-size: 11px;
+}
+.hm-table th:first-child { text-align: left; min-width: 120px; }
+.hm-row-label {
+  padding: 6px 10px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  color: #666;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.hm-cell {
+  padding: 6px 8px;
+  text-align: center;
+  border: 1px solid #ddd;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+/* ── DATA TABLE ── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.data-table th {
+  padding: 8px 12px;
+  text-align: left;
+  background: #1a1a1a;
+  color: #fff;
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: normal;
+  letter-spacing: 0.5px;
+  border: 1px solid #1a1a1a;
+}
+.data-table td {
+  padding: 7px 12px;
+  border: 1px solid #ddd;
+  font-family: monospace;
+  color: #444;
+}
+.data-table .group-row td {
+  background: #f5f5f5;
+  font-weight: bold;
+  color: #333;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-top: 2px solid #ccc;
+}
+.data-table .best { color: #1a1a1a; font-weight: bold; }
+.data-table .best::after { content: " ★"; color: #888; }
+
+/* ── THESIS ── */
+.thesis-box { border: 1px solid #ddd; }
+.thesis-head {
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.thesis-head span { font-family: monospace; font-size: 11px; color: #666; }
+.btn-copy {
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  padding: 5px 12px;
+  font-family: monospace;
+  font-size: 10px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.btn-copy:hover { background: #333; }
+.thesis-body {
+  padding: 20px;
+  font-size: 13.5px;
+  line-height: 1.85;
+  color: #333;
+}
+.thesis-body p + p { margin-top: 12px; }
+
+/* ── PLACEHOLDER ── */
+.placeholder {
+  padding: 80px 40px;
+  text-align: center;
+  border: 1px dashed #ccc;
+  color: #aaa;
+}
+.placeholder h3 { font-size: 16px; color: #888; margin-bottom: 8px; font-weight: normal; }
+.placeholder p  { font-size: 13px; font-style: italic; }

@@ -11,13 +11,18 @@ interface ComparisonChartsProps {
 }
 
 export const MetricGroupedChart: React.FC<ComparisonChartsProps> = ({ results }) => {
+  // Check if there are multiple models (filter out undefined)
+  const uniqueModels = new Set(results.map(r => r.modelId).filter(Boolean));
+  const hasMultipleModels = uniqueModels.size > 1;
+  
   const data = results.map(r => ({
-    name: r.variantId,
+    name: hasMultipleModels ? `${r.variantId} (${r.modelLabel?.split(' ')[0] || ''})` : r.variantId,
     Coherence: r.evaluation.coherence,
     Creativity: r.evaluation.creativity,
     Consistency: r.evaluation.characterConsistency,
     Style: r.evaluation.styleMatch,
-    Ending: r.evaluation.endingStrength
+    Ending: r.evaluation.endingStrength,
+    LexicalDiversity: r.evaluation.lexicalDiversity
   }));
 
   return (
@@ -34,6 +39,7 @@ export const MetricGroupedChart: React.FC<ComparisonChartsProps> = ({ results })
           <Bar dataKey="Consistency" fill="#8b5cf6" />
           <Bar dataKey="Style" fill="#10b981" />
           <Bar dataKey="Ending" fill="#f59e0b" />
+          <Bar dataKey="LexicalDiversity" fill="#06b6d4" />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -41,10 +47,15 @@ export const MetricGroupedChart: React.FC<ComparisonChartsProps> = ({ results })
 };
 
 export const ComparisonBarChart: React.FC<ComparisonChartsProps> = ({ results }) => {
+  // Check if there are multiple models (filter out undefined)
+  const uniqueModels = new Set(results.map(r => r.modelId).filter(Boolean));
+  const hasMultipleModels = uniqueModels.size > 1;
+  
   const data = results.map(r => ({
-    name: r.variantId,
+    name: hasMultipleModels ? `${r.variantId} (${r.modelLabel?.split(' ')[0] || ''})` : r.variantId,
     score: r.evaluation.avg,
-    label: r.variantLabel
+    label: r.variantLabel,
+    model: r.modelLabel
   }));
 
   return (
@@ -76,6 +87,7 @@ export const SingleVariantRadar: React.FC<RadarProps> = ({ result }) => {
     { subject: 'Consistency', value: result.evaluation.characterConsistency, fullMark: 10 },
     { subject: 'Style', value: result.evaluation.styleMatch, fullMark: 10 },
     { subject: 'Ending', value: result.evaluation.endingStrength, fullMark: 10 },
+    { subject: 'Lexical', value: result.evaluation.lexicalDiversity, fullMark: 10 },
   ];
 
   return (

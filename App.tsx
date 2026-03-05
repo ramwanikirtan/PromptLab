@@ -4,8 +4,8 @@ import Layout from './components/Layout';
 import StoryConfigForm from './components/StoryConfigForm';
 import ComparisonPanel from './components/ComparisonPanel';
 import SideBySidePanel from './components/SideBySidePanel';
-import { ExperimentRun, StoryConfig, VariantId } from './types';
-import { DEFAULT_STORY_CONFIG, VARIANT_TEMPLATES } from './constants';
+import { ExperimentRun, StoryConfig, VariantId, ModelId } from './types';
+import { DEFAULT_STORY_CONFIG, VARIANT_TEMPLATES, AVAILABLE_MODELS } from './constants';
 import { openaiService } from './services/openaiService';
 import { dbService } from './services/dbService';
 
@@ -26,8 +26,9 @@ const App: React.FC = () => {
     setProgress({});
     
     try {
-      const results = await openaiService.runExperiment(config, (variantId, status) => {
-        setProgress(prev => ({ ...prev, [variantId]: status }));
+      const results = await openaiService.runExperiment(config, (variantId, status, modelId) => {
+        const key = modelId ? `${variantId}-${modelId}` : variantId;
+        setProgress(prev => ({ ...prev, [key]: status }));
       });
 
       const newRun: ExperimentRun = {
@@ -65,29 +66,47 @@ const App: React.FC = () => {
           <div className="flex flex-col items-center gap-4 py-6">
             <button
               onClick={handleRunExperiment}
-              disabled={isRunning}
-              className={`px-10 py-4 rounded-full text-lg font-bold shadow-xl transition-all transform hover:scale-105 active:scale-95 ${isRunning ? 'bg-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}
+              disabled={isRunning || !config.selectedModels?.length || !config.selectedVariants?.length}
+              className={`px-10 py-4 rounded-full text-lg font-bold shadow-xl transition-all transform hover:scale-105 active:scale-95 ${isRunning || !config.selectedModels?.length || !config.selectedVariants?.length ? 'bg-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}
             >
-              {isRunning ? 'Running Experiment (V0..V7)...' : 'START RESEARCH EXPERIMENT'}
+              {isRunning ? `Running Experiment (${config.selectedModels?.length || 1} model${(config.selectedModels?.length || 1) > 1 ? 's' : ''}, ${config.selectedVariants?.length || 8} variant${(config.selectedVariants?.length || 8) > 1 ? 's' : ''})...` : 'START RESEARCH EXPERIMENT'}
             </button>
             <p className="text-xs text-slate-400 text-center max-w-sm">
-              Note: This will execute 8 separate LLM calls for story generation and 8 for evaluation. It may take 1-3 minutes.
+              Note: This will execute {(config.selectedVariants?.length || 8) * (config.selectedModels?.length || 1)} LLM calls for story generation and {(config.selectedVariants?.length || 8) * (config.selectedModels?.length || 1)} for evaluation across {config.selectedModels?.length || 1} model{(config.selectedModels?.length || 1) > 1 ? 's' : ''} and {config.selectedVariants?.length || 8} variant{(config.selectedVariants?.length || 8) > 1 ? 's' : ''}.
             </p>
           </div>
 
           {isRunning && (
             <div className="bg-white p-6 rounded-xl border border-indigo-100 shadow-sm animate-pulse">
               <h4 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Real-time Progress</h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {VARIANT_TEMPLATES.map(v => (
-                  <div key={v.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                    <span className="font-semibold text-slate-700">{v.id}: {v.label}</span>
-                    <span className={`text-xs px-2 py-1 rounded-full ${progress[v.id]?.includes('Error') ? 'bg-red-100 text-red-600' : 'bg-indigo-100 text-indigo-600'}`}>
-                      {progress[v.id] || "Pending..."}
-                    </span>
+              {config.selectedModels?.map(modelId => {
+                const model = AVAILABLE_MODELS.find(m => m.id === modelId);
+                const selectedVariantTemplates = VARIANT_TEMPLATES.filter(v => config.selectedVariants?.includes(v.id));
+                return (
+                  <div key={modelId} className="mb-4 last:mb-0">
+                    <h5 className="text-sm font-semibold text-indigo-700 mb-2">{model?.label || modelId}</h5>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {selectedVariantTemplates.map(v => {
+                        const progressKey = `${v.id}-${modelId}`;
+                        return (
+                          <div key={progressKey} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                            <span className="font-semibold text-slate-700">{v.id}: {v.label}</span>
+                            <span className={`text-xs px-2 py-1 rounded-full ${
+                              progress[progressKey]?.includes('Error') || progress[progressKey]?.includes('Failed') 
+                                ? 'bg-red-100 text-red-600' 
+                                : progress[progressKey]?.includes('Completed')
+                                ? 'bg-green-100 text-green-600'
+                                : 'bg-indigo-100 text-indigo-600'
+                            }`}>
+                              {progress[progressKey] || "Pending..."}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                ))}
-              </div>
+                );
+              })}
             </div>
           )}
         </div>

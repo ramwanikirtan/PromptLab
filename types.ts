@@ -10,6 +10,20 @@ export enum VariantId {
   V7 = 'V7'
 }
 
+export enum ModelId {
+  GPT4O_MINI = 'gpt-4o-mini',
+  GPT35_TURBO = 'gpt-3.5-turbo',
+  GEMINI_FLASH = 'gemini-2.0-flash',
+  MISTRAL_7B = 'mistral-7b'
+}
+
+export interface ModelConfig {
+  id: ModelId;
+  label: string;
+  provider: 'openai' | 'google' | 'mistral';
+  description: string;
+}
+
 export interface StoryConfig {
   idea: string;
   genre: string;
@@ -21,6 +35,8 @@ export interface StoryConfig {
   avoids: string[];
   temperature: number;
   isDeterministic: boolean;
+  selectedModels?: ModelId[];
+  selectedVariants?: VariantId[];
 }
 
 export interface EvaluationMetrics {
@@ -29,12 +45,15 @@ export interface EvaluationMetrics {
   characterConsistency: number;
   styleMatch: number;
   endingStrength: number;
+  lexicalDiversity: number;
   avg: number;
 }
 
 export interface StoryResult {
   variantId: VariantId;
   variantLabel: string;
+  modelId?: ModelId;
+  modelLabel?: string;
   promptUsed: string;
   storyText: string;
   rawModelResponse: string;

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PromptLab — Model Evaluator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="app-title">
+      PromptLab
+      <span>LLM Evaluation Tool</span>
+    </div>
+
+    <div>
+      <span class="field-label">Reference Style</span>
+      <textarea id="refStyle" class="ref-textarea" placeholder="Paste reference style text…"></textarea>
+    </div>
+
+    <div>
+      <span class="field-label">Model Outputs</span>
+
+      <div class="model-row">
+        <div class="model-name">
+          <div class="model-dot" style="background:#c0392b"></div>
+          GPT-4o-mini
+        </div>
+        <textarea id="m1" placeholder="Paste output…" oninput="updateWC('wc1', this.value)"></textarea>
+        <div class="wc" id="wc1">0 words</div>
+      </div>
+
+      <div class="model-row">
+        <div class="model-name">
+          <div class="model-dot" style="background:#1d4ed8"></div>
+          GPT-3.5-turbo
+        </div>
+        <textarea id="m2" placeholder="Paste output…" oninput="updateWC('wc2', this.value)"></textarea>
+        <div class="wc" id="wc2">0 words</div>
+      </div>
+
+      <div class="model-row">
+        <div class="model-name">
+          <div class="model-dot" style="background:#15803d"></div>
+          Gemini 2.0 Flash
+        </div>
+        <textarea id="m3" placeholder="Paste output…" oninput="updateWC('wc3', this.value)"></textarea>
+        <div class="wc" id="wc3">0 words</div>
+      </div>
+
+      <div class="model-row">
+        <div class="model-name">
+          <div class="model-dot" style="background:#7c3aed"></div>
+          Mistral-7B
+        </div>
+        <textarea id="m4" placeholder="Paste output…" oninput="updateWC('wc4', this.value)"></textarea>
+        <div class="wc" id="wc4">0 words</div>
+      </div>
+    </div>
+
+    <div>
+      <button class="btn-run" onclick="runEval()">Run Evaluation</button>
+      <button class="btn-reset" onclick="resetAll()">Clear</button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+    <div class="page-header">
+      <h1>Evaluation Report</h1>
+      <p>Lexical Diversity · Style Match · Coherence — scores 0–10 · no external APIs</p>
+    </div>
+
+    <div id="report">
+      <div class="placeholder">
+        <h3>No data yet</h3>
+        <p>Paste model outputs on the left and click Run Evaluation.</p>
+      </div>
+    </div>
+  </main>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>

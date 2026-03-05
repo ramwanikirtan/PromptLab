@@ -1,19 +1,35 @@
 
-import React, { useState } from 'react';
-import { ExperimentRun, VariantId } from '../types';
+import React, { useState, useMemo } from 'react';
+import { ExperimentRun, VariantId, ModelId } from '../types';
+import { AVAILABLE_MODELS } from '../constants';
 
 interface Props {
   run: ExperimentRun;
 }
 
 const SideBySidePanel: React.FC<Props> = ({ run }) => {
-  const [leftId, setLeftId] = useState<VariantId>(VariantId.V0);
-  const [rightId, setRightId] = useState<VariantId>(VariantId.V3);
+  const [leftIdx, setLeftIdx] = useState<number>(0);
+  const [rightIdx, setRightIdx] = useState<number>(Math.min(3, run.results.length - 1));
 
-  const left = run.results.find(r => r.variantId === leftId);
-  const right = run.results.find(r => r.variantId === rightId);
+  // Get unique models in this run (filter out undefined for backward compatibility)
+  const modelsInRun = useMemo(() => {
+    const models = new Set(run.results.map(r => r.modelId).filter((id): id is ModelId => id !== undefined));
+    return Array.from(models);
+  }, [run.results]);
+
+  const hasMultipleModels = modelsInRun.length > 1;
+
+  const left = run.results[leftIdx];
+  const right = run.results[rightIdx];
 
   if (!left || !right) return null;
+
+  const getResultLabel = (result: typeof left) => {
+    if (hasMultipleModels) {
+      return `${result.variantId}: ${result.variantLabel} (${result.modelLabel || 'Unknown'})`;
+    }
+    return `${result.variantId}: ${result.variantLabel}`;
+  };
 
   const metrics = [
     { key: 'coherence', label: 'Coherence' },
@@ -29,23 +45,31 @@ const SideBySidePanel: React.FC<Props> = ({ run }) => {
       {/* Top Selectors */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex-1">
-          <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Variant A</label>
+          <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Result A</label>
           <select 
-            value={leftId} 
-            onChange={(e) => setLeftId(e.target.value as VariantId)}
+            value={leftIdx} 
+            onChange={(e) => setLeftIdx(parseInt(e.target.value))}
             className="w-full p-2 border rounded-lg bg-white"
           >
-            {run.results.map(r => <option key={r.variantId} value={r.variantId}>{r.variantId}: {r.variantLabel}</option>)}
+            {run.results.map((r, idx) => (
+              <option key={`${r.variantId}-${r.modelId}-${idx}`} value={idx}>
+                {getResultLabel(r)}
+              </option>
+            ))}
           </select>
         </div>
         <div className="flex-1">
-          <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Variant B</label>
+          <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Result B</label>
           <select 
-            value={rightId} 
-            onChange={(e) => setRightId(e.target.value as VariantId)}
+            value={rightIdx} 
+            onChange={(e) => setRightIdx(parseInt(e.target.value))}
             className="w-full p-2 border rounded-lg bg-white"
           >
-            {run.results.map(r => <option key={r.variantId} value={r.variantId}>{r.variantId}: {r.variantLabel}</option>)}
+            {run.results.map((r, idx) => (
+              <option key={`${r.variantId}-${r.modelId}-${idx}`} value={idx}>
+                {getResultLabel(r)}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -56,8 +80,14 @@ const SideBySidePanel: React.FC<Props> = ({ run }) => {
           <thead className="bg-slate-50 text-slate-500 uppercase text-xs font-bold">
             <tr>
               <th className="p-4">Metric</th>
-              <th className="p-4">{left.variantLabel}</th>
-              <th className="p-4">{right.variantLabel}</th>
+              <th className="p-4">
+                {left.variantLabel}
+                {hasMultipleModels && <span className="ml-1 text-indigo-500">({left.modelLabel || 'Unknown'})</span>}
+              </th>
+              <th className="p-4">
+                {right.variantLabel}
+                {hasMultipleModels && <span className="ml-1 text-indigo-500">({right.modelLabel || 'Unknown'})</span>}
+              </th>
               <th className="p-4">Delta</th>
             </tr>
           </thead>
@@ -84,13 +114,19 @@ const SideBySidePanel: React.FC<Props> = ({ run }) => {
       {/* Text Comparison */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[600px]">
         <div className="bg-white rounded-xl border shadow-sm flex flex-col overflow-hidden">
-          <div className="bg-slate-50 p-3 border-b text-center font-bold text-slate-700">{left.variantLabel}</div>
+          <div className="bg-slate-50 p-3 border-b text-center">
+            <div className="font-bold text-slate-700">{left.variantLabel}</div>
+            {hasMultipleModels && <div className="text-xs text-slate-500">{left.modelLabel || 'Unknown'}</div>}
+          </div>
           <div className="p-6 overflow-y-auto font-serif leading-relaxed text-slate-700 text-sm whitespace-pre-wrap bg-slate-50/50">
             {left.storyText}
           </div>
         </div>
         <div className="bg-white rounded-xl border shadow-sm flex flex-col overflow-hidden">
-          <div className="bg-slate-50 p-3 border-b text-center font-bold text-slate-700">{right.variantLabel}</div>
+          <div className="bg-slate-50 p-3 border-b text-center">
+            <div className="font-bold text-slate-700">{right.variantLabel}</div>
+            {hasMultipleModels && <div className="text-xs text-slate-500">{right.modelLabel || 'Unknown'}</div>}
+          </div>
           <div className="p-6 overflow-y-auto font-serif leading-relaxed text-slate-700 text-sm whitespace-pre-wrap bg-slate-50/50">
             {right.storyText}
           </div>

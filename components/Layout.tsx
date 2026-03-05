@@ -41,6 +41,16 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
               Compare Variants
             </button>
           </li>
+          <li>
+            <a
+              href="/PromptEvaluation/evaluation.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full block text-left px-4 py-2 rounded-lg transition-colors bg-emerald-700 hover:bg-emerald-800 text-white font-semibold mt-4 text-center"
+            >
+              Open Manual Evaluation
+            </a>
+          </li>
         </ul>
 
         <div className="mt-auto pt-6 border-t border-slate-800 text-slate-500 text-xs">

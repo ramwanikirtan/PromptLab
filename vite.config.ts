@@ -11,8 +11,9 @@ export default defineConfig(({ mode }) => {
       },
       plugins: [react()],
       define: {
-        'process.env.API_KEY': JSON.stringify(env.OPENAI_API_KEY),
-        'process.env.OPENAI_API_KEY': JSON.stringify(env.OPENAI_API_KEY)
+        'process.env.OPENAI_API_KEY': JSON.stringify(env.OPENAI_API_KEY),
+        'process.env.GOOGLE_API_KEY': JSON.stringify(env.GOOGLE_API_KEY),
+        'process.env.HUGGINGFACE_API_KEY': JSON.stringify(env.HUGGINGFACE_API_KEY)
       },
       resolve: {
         alias: {
