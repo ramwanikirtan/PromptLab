@@ -1,4 +1,3 @@
-
 import { VariantId, PromptTemplate, StoryConfig, ModelId, ModelConfig } from './types';
 
 export const AVAILABLE_MODELS: ModelConfig[] = [
@@ -33,3 +32,8 @@ export const DEFAULT_STORY_CONFIG: StoryConfig = {
   selectedModels: [ModelId.GPT4O_MINI],
   selectedVariants: []
 };
+
+// Add a default reference style for each variant (for demo, use config.style or a fallback)
+VARIANT_TEMPLATES.forEach(t => {
+  t.referenceStyle = DEFAULT_STORY_CONFIG.style || 'Dark, introspective, poetic';
+});
